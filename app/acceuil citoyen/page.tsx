@@ -1,6 +1,5 @@
 import { Activity, CheckCircle2, FileText, Globe, MapPin, ShieldCheck, Thermometer } from "lucide-react";
 
-const userName = "Citoyen"; // À remplacer par le nom du citoyen connecté
 const trendingTags = [
   '#SaisonGrippe2024',
   '#AlimentationSaine',
@@ -20,10 +19,10 @@ export default function Page() {
               </span>
               <div className="space-y-2">
                 <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                  Bonjour {userName}
+                  Bonjour Alex
                 </h1>
                 <p className="max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                  Voici les dernières informations de santé publique pour votre territoire.
+                  Voici les dernières informations de santé publique pour votre région.
                 </p>
               </div>
             </div>
@@ -120,29 +119,29 @@ export default function Page() {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Statut local</p>
-                <h3 className="mt-3 text-xl font-semibold text-slate-900">Guide allergies printemps</h3>
+                <h3 className="mt-3 text-xl font-semibold text-slate-900">Spring Allergy Guide</h3>
               </div>
               <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-100 text-slate-700">
                 <ShieldCheck className="h-7 w-7" />
               </div>
             </div>
             <p className="mt-5 text-sm leading-7 text-slate-600">
-              Comment gérer les symptômes pendant la saison de pollen.
+              How to manage symptoms during the peak pollen season.
             </p>
           </article>
 
           <article className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/40 sm:p-8">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">DERNIÈRE INFO</p>
-                <h3 className="mt-3 text-xl font-semibold text-slate-900">Rapport qualité de l’eau</h3>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">UPDATE</p>
+                <h3 className="mt-3 text-xl font-semibold text-slate-900">Water Quality Report</h3>
               </div>
               <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-100 text-slate-700">
                 <FileText className="h-7 w-7" />
               </div>
             </div>
             <p className="mt-5 text-sm leading-7 text-slate-600">
-              Le rapport annuel de la qualité de l’eau municipale est maintenant disponible.
+              The annual municipal water safety audit results are now available.
             </p>
           </article>
         </section>
@@ -171,6 +170,5 @@ export default function Page() {
     </main>
   );
 }
-
 
 
