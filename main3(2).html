@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>KANDA PALU – Profil & Paramètres</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#0A1628;--blue:#1B3A7A;--blue2:#2563EB;
+  --teal:#0D9488;--teal2:#14B8A6;
+  --accent:#F59E0B;--red:#EF4444;--green:#10B981;
+  --bg:#F1F5FB;--white:#fff;--gray:#64748B;--gray2:#94A3B8;
+  --border:#E2E8F0;--text:#1E293B;--sbar:260px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);display:flex;min-height:100vh;color:var(--text);}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{width:var(--sbar);background:var(--navy);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100;}
+.sb-logo{padding:26px 22px 20px;display:flex;align-items:center;gap:11px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.sb-logo-icon{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--teal2),var(--teal));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px rgba(13,148,136,0.4);}
+.sb-logo-icon svg{width:22px;height:22px;}
+.sb-logo-txt h3{font-family:'Bricolage Grotesque',sans-serif;font-size:0.95rem;font-weight:800;color:#fff;letter-spacing:2px;}
+.sb-logo-txt span{font-size:0.65rem;color:rgba(255,255,255,0.35);}
+.sb-nav{flex:1;padding:18px 0;overflow-y:auto;}
+.sb-sec{padding:10px 22px 5px;font-size:0.62rem;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,0.28);font-weight:700;}
+.nav-a{display:flex;align-items:center;gap:11px;padding:11px 22px;color:rgba(255,255,255,0.5);font-size:0.85rem;font-weight:500;text-decoration:none;border-left:3px solid transparent;transition:all 0.2s;cursor:pointer;}
+.nav-a:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.85);}
+.nav-a.active{background:rgba(20,184,166,0.12);color:var(--teal2);border-left-color:var(--teal2);}
+.nav-a .ic{width:20px;text-align:center;font-size:1rem;}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:0.65rem;padding:2px 7px;border-radius:20px;font-weight:700;}
+.sb-user{padding:18px 22px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:10px;}
+.ava{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--teal2),var(--blue2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;}
+.ava-info h4{color:#fff;font-size:0.8rem;font-weight:600;}
+.ava-info span{color:rgba(255,255,255,0.35);font-size:0.68rem;}
+.logout-ic{margin-left:auto;cursor:pointer;color:rgba(255,255,255,0.3);font-size:1rem;transition:color 0.2s;}
+.logout-ic:hover{color:var(--red);}
+
+/* ═══ MAIN ═══ */
+.main{margin-left:var(--sbar);flex:1;display:flex;flex-direction:column;}
+.topbar{background:var(--white);padding:14px 30px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,0.04);}
+.tb-l h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--navy);}
+.tb-l span{font-size:0.77rem;color:var(--gray2);margin-top:1px;display:block;}
+.tb-r{display:flex;align-items:center;gap:12px;}
+.tb-search{display:flex;align-items:center;gap:7px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:0.82rem;color:var(--gray);}
+.tb-notif{width:36px;height:36px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;font-size:1rem;}
+.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid #fff;}
+
+/* ═══ CONTENT ═══ */
+.content{padding:28px 30px;flex:1;max-width:720px;}
+
+/* PROFILE HEADER CARD */
+.profile-header{
+  background:var(--white);border-radius:20px;
+  padding:28px 30px;
+  box-shadow:0 4px 24px rgba(10,22,40,0.07);
+  margin-bottom:22px;
+  display:flex;align-items:center;gap:22px;
+  position:relative;overflow:hidden;
+}
+.profile-header::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(20,184,166,0.08),transparent 70%);
+  pointer-events:none;
+}
+.ph-avatar-wrap{position:relative;flex-shrink:0;}
+.ph-avatar{
+  width:82px;height:82px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal2),var(--blue2));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-size:1.8rem;font-weight:800;color:#fff;
+  border:3px solid var(--white);
+  box-shadow:0 6px 20px rgba(20,184,166,0.35);
+}
+.ph-edit-btn{
+  position:absolute;bottom:2px;right:2px;
+  width:26px;height:26px;border-radius:50%;
+  background:var(--blue2);border:2px solid var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.65rem;cursor:pointer;color:#fff;
+  box-shadow:0 2px 8px rgba(37,99,235,0.4);
+}
+.ph-info h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.4rem;font-weight:800;color:var(--navy);}
+.ph-info .ph-role{color:var(--teal);font-weight:600;font-size:0.9rem;margin-top:4px;}
+.ph-id{
+  display:inline-block;margin-top:8px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;padding:4px 12px;
+  font-size:0.78rem;color:var(--gray);font-weight:600;
+  letter-spacing:0.5px;
+}
+.ph-stats{
+  margin-left:auto;display:flex;gap:18px;
+  flex-shrink:0;
+}
+.ph-stat{text-align:center;}
+.ph-stat .psv{font-family:'Bricolage Grotesque',sans-serif;font-size:1.4rem;font-weight:800;color:var(--navy);}
+.ph-stat .psl{font-size:0.72rem;color:var(--gray2);margin-top:2px;}
+
+/* SETTINGS SECTIONS */
+.settings-block{
+  background:var(--white);border-radius:18px;
+  box-shadow:0 4px 24px rgba(10,22,40,0.07);
+  margin-bottom:16px;overflow:hidden;
+}
+.settings-section-lbl{
+  padding:12px 22px 8px;
+  font-size:0.68rem;text-transform:uppercase;
+  letter-spacing:1.8px;color:var(--gray2);font-weight:700;
+  background:var(--bg);border-bottom:1px solid var(--border);
+}
+.settings-item{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 22px;
+  border-bottom:1px solid var(--bg);
+  cursor:pointer;transition:background 0.18s;
+}
+.settings-item:last-child{border-bottom:none;}
+.settings-item:hover{background:rgba(241,245,251,0.8);}
+.si-icon{
+  width:40px;height:40px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.si-blue{background:rgba(37,99,235,0.1);}
+.si-teal{background:rgba(20,184,166,0.1);}
+.si-amber{background:rgba(245,158,11,0.1);}
+.si-green{background:rgba(16,185,129,0.1);}
+.si-gray{background:rgba(100,116,139,0.1);}
+.si-navy{background:rgba(27,58,122,0.1);}
+.si-txt{flex:1;}
+.si-txt h4{color:var(--navy);font-size:0.88rem;font-weight:600;}
+.si-txt p{color:var(--gray2);font-size:0.76rem;margin-top:2px;}
+.si-arrow{color:var(--gray2);font-size:1rem;flex-shrink:0;}
+.si-badge{
+  background:rgba(239,68,68,0.1);color:var(--red);
+  font-size:0.68rem;font-weight:700;
+  padding:2px 9px;border-radius:20px;
+  margin-left:auto;margin-right:6px;
+}
+.si-toggle{
+  width:42px;height:24px;background:var(--teal2);border-radius:12px;
+  position:relative;cursor:pointer;transition:background 0.2s;
+  margin-left:auto;flex-shrink:0;
+}
+.si-toggle.off{background:var(--border);}
+.si-toggle::after{
+  content:'';position:absolute;width:18px;height:18px;
+  background:#fff;border-radius:50%;top:3px;left:3px;
+  transition:left 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);
+}
+.si-toggle:not(.off)::after{left:21px;}
+
+/* LOGOUT */
+.btn-logout{
+  width:100%;padding:15px;margin-top:8px;
+  background:rgba(239,68,68,0.06);
+  border:1.5px solid rgba(239,68,68,0.25);
+  border-radius:14px;cursor:pointer;
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-size:0.97rem;font-weight:700;
+  color:var(--red);transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+}
+.btn-logout:hover{background:var(--red);color:#fff;border-color:var(--red);}
+
+.version{text-align:center;color:var(--gray2);font-size:0.76rem;margin-top:14px;}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(10,22,40,0.55);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;}
+.overlay.on{display:flex;}
+.modal{background:var(--white);border-radius:20px;padding:28px;width:90%;max-width:480px;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.modal-head h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);}
+.modal-close{width:32px;height:32px;border-radius:9px;border:none;background:var(--bg);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.fg{margin-bottom:16px;}
+.fg label{display:block;font-size:0.71rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:6px;}
+.fg input,.fg select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;color:var(--text);background:var(--white);outline:none;transition:all 0.2s;}
+.fg input:focus,.fg select:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(20,184,166,0.12);}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+.btn-cancel{padding:10px 20px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;color:var(--gray);}
+.btn-save{padding:10px 22px;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;border:none;border-radius:10px;font-family:'Bricolage Grotesque',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,99,235,0.3);}
+
+/* TOAST */
+.toast{position:fixed;top:20px;right:20px;min-width:270px;background:var(--white);border-radius:14px;padding:13px 18px;box-shadow:0 12px 40px rgba(0,0,0,0.12);display:flex;align-items:center;gap:11px;z-index:9999;opacity:0;transform:translateX(40px);transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);border-left:4px solid var(--teal2);}
+.toast.on{opacity:1;transform:translateX(0);}
+.toast-txt strong{display:block;color:var(--navy);font-size:0.88rem;}
+.toast-txt span{color:var(--gray);font-size:0.77rem;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon"><svg viewBox="0 0 48 48" fill="none"><path d="M24 4C15.163 4 8 11.163 8 20C8 31.5 24 44 24 44C24 44 40 31.5 40 20C40 11.163 32.837 4 24 4Z" fill="white" fill-opacity="0.9"/><circle cx="24" cy="20" r="7" fill="#0D9488"/><path d="M20 17L23 20L27 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="sb-logo-txt"><h3>KANDA PALU</h3><span>Surveillance Épidémio.</span></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Principal</div>
+    <a class="nav-a" href="main2.html"><span class="ic">📊</span> Tableau de bord</a>
+    <a class="nav-a" href="main2.html"><span class="ic">🏥</span> Gestion Patients <span class="nb" id="nb-count">10</span></a>
+    <a class="nav-a" href="main1.html"><span class="ic">➕</span> Ajouter un Patient</a>
+    <div class="sb-sec">Analyse</div>
+    <a class="nav-a" href="main2.html#carte"><span class="ic">🗺️</span> Carte Épidémio.</a>
+    <a class="nav-a" href="main2.html#alertes"><span class="ic">🔔</span> Alertes <span class="nb">3</span></a>
+    <div class="sb-sec">Espace</div>
+    <a class="nav-a" href="accueil-citoyen.html"><span class="ic">🏘️</span> Espace Citoyen</a>
+    <a class="nav-a active" href="main3.html"><span class="ic">⚙️</span> Profil & Paramètres</a>
+  </nav>
+  <div class="sb-user">
+    <div class="ava" id="sb-ava">JD</div>
+    <div class="ava-info"><h4 id="sb-name">Dr. Jean Dupont</h4><span id="sb-role">Médecin Épidémiologiste</span></div>
+    <span class="logout-ic" onclick="doLogout()">🚪</span>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="tb-l">
+      <h2>Profil & Paramètres</h2>
+      <span id="tb-date"></span>
+    </div>
+    <div class="tb-r">
+      <div class="tb-search">🔍 Rechercher...</div>
+      <div class="tb-notif">🔔<span class="notif-dot"></span></div>
+      <div class="ava" id="top-ava">JD</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- PROFILE HEADER -->
+    <div class="profile-header">
+      <div class="ph-avatar-wrap">
+        <div class="ph-avatar" id="ph-avatar">JD</div>
+        <div class="ph-edit-btn" onclick="openModal('photo')">✏️</div>
+      </div>
+      <div class="ph-info">
+        <h2 id="ph-name">Dr. Jean Dupont</h2>
+        <div class="ph-role" id="ph-role">Médecin Épidémiologiste</div>
+        <div class="ph-id">ID : KP-8892</div>
+      </div>
+      <div class="ph-stats">
+        <div class="ph-stat"><div class="psv" id="ph-pts">10</div><div class="psl">Patients</div></div>
+        <div class="ph-stat"><div class="psv">47</div><div class="psl">Rapports</div></div>
+        <div class="ph-stat"><div class="psv">2026</div><div class="psl">Depuis</div></div>
+      </div>
+    </div>
+
+    <!-- PARAMÈTRES DU COMPTE -->
+    <div class="settings-block">
+      <div class="settings-section-lbl">PARAMÈTRES DU COMPTE</div>
+
+      <div class="settings-item" onclick="openModal('info')">
+        <div class="si-icon si-blue">👤</div>
+        <div class="si-txt"><h4>Informations Personnelles</h4><p>Gérez vos données privées</p></div>
+        <span class="si-arrow">›</span>
+      </div>
+
+      <div class="settings-item" onclick="openModal('notif')">
+        <div class="si-icon si-teal">🔔</div>
+        <div class="si-txt"><h4>Préférences de Notification</h4><p>Alertes et mises à jour</p></div>
+        <span class="si-badge">3</span>
+        <span class="si-arrow">›</span>
+      </div>
+
+      <div class="settings-item" onclick="openModal('security')">
+        <div class="si-icon si-amber">🔒</div>
+        <div class="si-txt"><h4>Sécurité du Compte</h4><p>Mot de passe et authentification</p></div>
+        <span class="si-arrow">›</span>
+      </div>
+
+      <div class="settings-item" onclick="openModal('langue')">
+        <div class="si-icon si-navy">🌐</div>
+        <div class="si-txt"><h4>Langue et Région</h4><p>Français (FR) — Cameroun</p></div>
+        <span class="si-arrow">›</span>
+      </div>
+    </div>
+
+    <!-- PRÉFÉRENCES -->
+    <div class="settings-block">
+      <div class="settings-section-lbl">PRÉFÉRENCES D'AFFICHAGE</div>
+
+      <div class="settings-item">
+        <div class="si-icon si-gray">🌙</div>
+        <div class="si-txt"><h4>Mode Sombre</h4><p>Activer le thème sombre</p></div>
+        <div class="si-toggle off" id="toggle-dark" onclick="toggleSwitch(this)"></div>
+      </div>
+
+      <div class="settings-item">
+        <div class="si-icon si-green">📊</div>
+        <div class="si-txt"><h4>Graphiques Animés</h4><p>Animations des visualisations</p></div>
+        <div class="si-toggle" id="toggle-anim" onclick="toggleSwitch(this)"></div>
+      </div>
+
+      <div class="settings-item">
+        <div class="si-icon si-teal">📱</div>
+        <div class="si-txt"><h4>Notifications Push</h4><p>Alertes en temps réel</p></div>
+        <div class="si-toggle" id="toggle-push" onclick="toggleSwitch(this)"></div>
+      </div>
+    </div>
+
+    <!-- SUPPORT & INFORMATION -->
+    <div class="settings-block">
+      <div class="settings-section-lbl">SUPPORT & INFORMATION</div>
+
+      <div class="settings-item" onclick="showToast('❓','Centre d\'aide','Documentation KANDA PALU disponible')">
+        <div class="si-icon si-blue">❓</div>
+        <div class="si-txt"><h4>Centre d'aide</h4><p>Documentation et tutoriels</p></div>
+        <span style="color:var(--gray2);font-size:0.9rem;">↗</span>
+      </div>
+
+      <div class="settings-item" onclick="showToast('📋','Confidentialité','Politique de confidentialité v2.4')">
+        <div class="si-icon si-gray">📋</div>
+        <div class="si-txt"><h4>Politique de Confidentialité</h4><p>Traitement de vos données</p></div>
+        <span style="color:var(--gray2);font-size:0.9rem;">↗</span>
+      </div>
+
+      <div class="settings-item" onclick="showToast('ℹ️','À propos','KANDA PALU v2.4.0 – Build 2026 – IUT Douala')">
+        <div class="si-icon si-teal">ℹ️</div>
+        <div class="si-txt"><h4>À propos de KANDA PALU</h4><p>Version 2.4.0 (Build 2026)</p></div>
+        <span style="color:var(--gray2);font-size:0.9rem;">↗</span>
+      </div>
+    </div>
+
+    <!-- LOGOUT -->
+    <button class="btn-logout" onclick="doLogout()">
+      <span>🚪</span> Se déconnecter
+    </button>
+
+    <p class="version">Version 2.4.0 (Build 2026) — KANDA PALU © IUT Douala 🇨🇲</p>
+
+  </div>
+</main>
+
+<!-- MODALS -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal-box">
+    <div class="modal-head">
+      <h3 id="modal-title">Paramètres</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="ti" style="font-size:1.3rem">✅</span><div class="toast-txt"><strong id="tt"></strong><span id="tm"></span></div></div>
+
+<script>
+/* ── MODALS ── */
+const modals = {
+  info: {
+    title: '👤 Informations Personnelles',
+    html: `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="fg"><label>Nom</label><input type="text" id="m-nom" placeholder="Dupont"/></div>
+        <div class="fg"><label>Prénom</label><input type="text" id="m-prenom" placeholder="Jean"/></div>
+      </div>
+      <div class="fg"><label>Spécialité</label><input type="text" id="m-spec" placeholder="Médecin Épidémiologiste"/></div>
+      <div class="fg"><label>District d'affectation</label>
+        <select id="m-district">
+          <option>Douala I (Akwa)</option><option>Douala II</option>
+          <option>Yaoundé I</option><option>Bafoussam I</option>
+        </select>
+      </div>
+      <div class="fg"><label>Numéro de Téléphone</label><input type="tel" placeholder="+237 ..."/></div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+        <button class="btn-save" onclick="saveModal('Informations mises à jour !')">💾 Enregistrer</button>
+      </div>`
+  },
+  notif: {
+    title: '🔔 Préférences de Notification',
+    html: `
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        ${['Alertes épidémiques critiques','Nouveaux patients enregistrés','Rapports hebdomadaires','Mises à jour du système','Actualités santé publique'].map((n,i)=>`
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg);border-radius:10px;">
+          <span style="font-size:0.88rem;font-weight:500;color:var(--navy);">${n}</span>
+          <div class="si-toggle ${i<3?'':'off'}" onclick="toggleSwitch(this)" style="flex-shrink:0;"></div>
+        </div>`).join('')}
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">Fermer</button>
+        <button class="btn-save" onclick="saveModal('Notifications mises à jour !')">✅ Sauvegarder</button>
+      </div>`
+  },
+  security: {
+    title: '🔒 Sécurité du Compte',
+    html: `
+      <div class="fg"><label>Mot de passe actuel</label><input type="password" placeholder="••••••••"/></div>
+      <div class="fg"><label>Nouveau mot de passe</label><input type="password" placeholder="Minimum 8 caractères"/></div>
+      <div class="fg"><label>Confirmer le nouveau mot de passe</label><input type="password" placeholder="Répéter le mot de passe"/></div>
+      <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+        <p style="font-size:0.78rem;color:#92400E;font-weight:600;">💡 Votre mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+        <button class="btn-save" onclick="saveModal('Mot de passe modifié avec succès !')">🔐 Modifier</button>
+      </div>`
+  },
+  langue: {
+    title: '🌐 Langue et Région',
+    html: `
+      <div class="fg"><label>Langue d'interface</label>
+        <select><option selected>Français (FR)</option><option>English (EN)</option></select>
+      </div>
+      <div class="fg"><label>Pays / Région</label>
+        <select><option selected>Cameroun 🇨🇲</option><option>Côte d'Ivoire 🇨🇮</option><option>Sénégal 🇸🇳</option><option>Congo 🇨🇬</option><option>Mali 🇲🇱</option></select>
+      </div>
+      <div class="fg"><label>Fuseau horaire</label>
+        <select><option selected>UTC+1 — Afrique Centrale</option><option>UTC+0</option></select>
+      </div>
+      <div class="fg"><label>Format de date</label>
+        <select><option selected>DD/MM/YYYY</option><option>MM/DD/YYYY</option><option>YYYY-MM-DD</option></select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+        <button class="btn-save" onclick="saveModal('Préférences linguistiques sauvegardées !')">💾 Sauvegarder</button>
+      </div>`
+  },
+  photo: {
+    title: '📷 Photo de Profil',
+    html: `
+      <div style="text-align:center;padding:20px 0;">
+        <div style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--teal2),var(--blue2));display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:#fff;margin:0 auto 16px;" id="modal-ava">JD</div>
+        <p style="font-size:0.85rem;color:var(--gray);margin-bottom:18px;">Choisissez une nouvelle photo de profil</p>
+        <div style="border:2px dashed var(--border);border-radius:12px;padding:24px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--teal2)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:2rem;margin-bottom:8px;">📁</div>
+          <p style="font-size:0.85rem;font-weight:600;color:var(--navy);">Cliquer pour choisir un fichier</p>
+          <p style="font-size:0.76rem;color:var(--gray2);margin-top:4px;">PNG, JPG — max. 5 MB</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+        <button class="btn-save" onclick="saveModal('Photo mise à jour !')">📷 Enregistrer</button>
+      </div>`
+  }
+};
+
+function openModal(key) {
+  const m = modals[key];
+  if(!m) return;
+  document.getElementById('modal-title').textContent = m.title;
+  document.getElementById('modal-body').innerHTML = m.html;
+  // fill user avatar in photo modal
+  if(key==='photo') {
+    const av = document.getElementById('modal-ava');
+    if(av) av.textContent = document.getElementById('ph-avatar').textContent;
+  }
+  document.getElementById('overlay').classList.add('on');
+}
+function closeModal(){document.getElementById('overlay').classList.remove('on');}
+function saveModal(msg){closeModal();showToast('✅','Sauvegardé',msg);}
+function toggleSwitch(el){el.classList.toggle('off');}
+
+/* ── TOAST ── */
+function showToast(icon,title,msg,color='var(--teal2)'){
+  const t=document.getElementById('toast');t.style.borderLeftColor=color;
+  document.getElementById('ti').textContent=icon;
+  document.getElementById('tt').textContent=title;
+  document.getElementById('tm').textContent=msg;
+  t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3400);
+}
+
+/* ── USER ── */
+function initUser(){
+  const s=JSON.parse(localStorage.getItem('kp_session')||'{}');
+  const name=s.name||'Dr. Jean Dupont';
+  const ini=name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  ['sb-ava','top-ava','ph-avatar'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.textContent=ini;
+  });
+  document.getElementById('sb-name').textContent=name;
+  document.getElementById('ph-name').textContent=name;
+  const roles={medecin:'Médecin Épidémiologiste',infirmier:'Infirmier(e)',admin:'Administrateur',citoyen:'Citoyen'};
+  const role=roles[s.role]||'Médecin Épidémiologiste';
+  document.getElementById('sb-role').textContent=role;
+  document.getElementById('ph-role').textContent=role;
+  const pts=JSON.parse(localStorage.getItem('kp_patients')||'[]');
+  document.getElementById('ph-pts').textContent=pts.length||10;
+  document.getElementById('nb-count').textContent=pts.length||10;
+}
+function doLogout(){localStorage.removeItem('kp_session');window.location.href='index.html';}
+
+window.onload=()=>{
+  initUser();
+  document.getElementById('tb-date').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+};
+</script>
+</body>
+</html>

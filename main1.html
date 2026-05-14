@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>KANDA PALU – Ajouter un Patient</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#0A1628;--blue:#1B3A7A;--blue2:#2563EB;
+  --teal:#0D9488;--teal2:#14B8A6;
+  --accent:#F59E0B;--red:#EF4444;--green:#10B981;
+  --bg:#F1F5FB;--white:#fff;--gray:#64748B;--gray2:#94A3B8;
+  --border:#E2E8F0;--text:#1E293B;
+  --sbar:260px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);display:flex;min-height:100vh;color:var(--text);}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{
+  width:var(--sbar);background:var(--navy);
+  position:fixed;top:0;left:0;height:100vh;
+  display:flex;flex-direction:column;z-index:100;
+  transition:width 0.3s;
+}
+.sb-logo{
+  padding:26px 22px 20px;
+  display:flex;align-items:center;gap:11px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.sb-logo-icon{
+  width:40px;height:40px;border-radius:11px;
+  background:linear-gradient(135deg,var(--teal2),var(--teal));
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(13,148,136,0.4);
+}
+.sb-logo-icon svg{width:22px;height:22px;}
+.sb-logo-txt h3{font-family:'Bricolage Grotesque',sans-serif;font-size:0.95rem;font-weight:800;color:#fff;letter-spacing:2px;}
+.sb-logo-txt span{font-size:0.65rem;color:rgba(255,255,255,0.35);letter-spacing:0.5px;}
+
+.sb-nav{flex:1;padding:18px 0;overflow-y:auto;}
+.sb-sec{padding:10px 22px 5px;font-size:0.62rem;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,0.28);font-weight:700;}
+.nav-a{
+  display:flex;align-items:center;gap:11px;
+  padding:11px 22px;color:rgba(255,255,255,0.5);
+  font-size:0.85rem;font-weight:500;text-decoration:none;
+  border-left:3px solid transparent;transition:all 0.2s;cursor:pointer;
+}
+.nav-a:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.85);}
+.nav-a.active{background:rgba(20,184,166,0.12);color:var(--teal2);border-left-color:var(--teal2);}
+.nav-a .ic{width:20px;text-align:center;font-size:1rem;}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:0.65rem;padding:2px 7px;border-radius:20px;font-weight:700;}
+
+.sb-user{
+  padding:18px 22px;border-top:1px solid rgba(255,255,255,0.07);
+  display:flex;align-items:center;gap:10px;
+}
+.ava{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal2),var(--blue2));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:0.8rem;
+}
+.ava-info h4{color:#fff;font-size:0.8rem;font-weight:600;}
+.ava-info span{color:rgba(255,255,255,0.35);font-size:0.68rem;}
+.logout-ic{margin-left:auto;cursor:pointer;color:rgba(255,255,255,0.3);font-size:1rem;transition:color 0.2s;}
+.logout-ic:hover{color:var(--red);}
+
+/* ═══ MAIN ═══ */
+.main{margin-left:var(--sbar);flex:1;display:flex;flex-direction:column;}
+
+/* TOPBAR */
+.topbar{
+  background:var(--white);padding:14px 30px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;
+  box-shadow:0 1px 6px rgba(0,0,0,0.04);
+}
+.tb-l h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--navy);}
+.tb-l span{font-size:0.77rem;color:var(--gray2);margin-top:1px;display:block;}
+.tb-r{display:flex;align-items:center;gap:12px;}
+.tb-search{
+  display:flex;align-items:center;gap:7px;
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:10px;padding:8px 14px;
+  font-size:0.82rem;color:var(--gray);
+}
+.tb-notif{
+  width:36px;height:36px;background:var(--bg);
+  border:1.5px solid var(--border);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;font-size:1rem;
+}
+.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid #fff;}
+
+/* ═══ PAGE CONTENT ═══ */
+.content{padding:28px 30px;flex:1;}
+
+/* PAGE HEADER */
+.ph{margin-bottom:26px;}
+.ph h1{font-family:'Bricolage Grotesque',sans-serif;font-size:1.6rem;font-weight:800;color:var(--navy);}
+.ph p{color:var(--gray);font-size:0.87rem;margin-top:4px;}
+
+/* FORM CARD */
+.form-wrap{
+  background:var(--white);border-radius:20px;
+  padding:30px;box-shadow:0 4px 24px rgba(10,22,40,0.07);
+  max-width:720px;
+}
+
+.section-card{
+  background:var(--bg);border-radius:14px;
+  padding:22px;margin-bottom:22px;
+  border:1.5px solid var(--border);
+}
+.section-card-head{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.section-card-head .sci{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+}
+.sci-blue{background:rgba(37,99,235,0.12);}
+.sci-teal{background:rgba(20,184,166,0.12);}
+.section-card-head h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);}
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.fg{margin-bottom:16px;}
+.fg:last-child{margin-bottom:0;}
+.fg label{display:block;font-size:0.71rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:6px;}
+.fg input,.fg select,.fg textarea{
+  width:100%;padding:11px 14px;
+  border:1.5px solid var(--border);border-radius:10px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;
+  color:var(--text);background:var(--white);outline:none;transition:all 0.2s;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(20,184,166,0.12);}
+.fg textarea{resize:vertical;min-height:90px;line-height:1.5;}
+
+/* SEVERITY BUTTONS — exactly like mockup */
+.sev-row{display:flex;gap:10px;}
+.sev-btn{
+  flex:1;padding:11px 8px;
+  border:2px solid var(--border);border-radius:10px;
+  background:var(--white);cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:0.82rem;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all 0.2s;color:var(--gray);
+}
+.sev-btn:hover{transform:translateY(-1px);}
+.sev-btn.sel-f{border-color:var(--green);background:rgba(16,185,129,0.08);color:var(--green);}
+.sev-btn.sel-m{border-color:var(--accent);background:rgba(245,158,11,0.08);color:#B45309;}
+.sev-btn.sel-c{border-color:var(--red);background:rgba(239,68,68,0.08);color:var(--red);}
+.sev-dot{width:9px;height:9px;border-radius:50%;}
+.sev-dot-g{background:var(--green);}
+.sev-dot-y{background:var(--accent);}
+.sev-dot-r{background:var(--red);}
+
+/* BOTTOM BUTTONS */
+.form-actions{display:flex;gap:12px;margin-top:6px;}
+.btn-save{
+  flex:1;padding:14px;
+  background:linear-gradient(135deg,var(--blue2),var(--blue),var(--navy));
+  color:#fff;border:none;border-radius:12px;
+  font-family:'Bricolage Grotesque',sans-serif;font-size:0.97rem;font-weight:700;
+  cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-save:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,0.3);}
+.btn-cancel{
+  padding:14px 24px;border:1.5px solid var(--border);
+  border-radius:12px;background:var(--white);cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;
+  color:var(--gray);transition:all 0.2s;
+}
+.btn-cancel:hover{background:var(--bg);}
+
+/* TOAST */
+.toast{
+  position:fixed;top:20px;right:20px;min-width:270px;
+  background:var(--white);border-radius:14px;
+  padding:13px 18px;box-shadow:0 12px 40px rgba(0,0,0,0.12);
+  display:flex;align-items:center;gap:11px;z-index:9999;
+  opacity:0;transform:translateX(40px);
+  transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  border-left:4px solid var(--teal2);
+}
+.toast.on{opacity:1;transform:translateX(0);}
+.toast-txt strong{display:block;color:var(--navy);font-size:0.88rem;}
+.toast-txt span{color:var(--gray);font-size:0.77rem;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">
+      <svg viewBox="0 0 48 48" fill="none"><path d="M24 4C15.163 4 8 11.163 8 20C8 31.5 24 44 24 44C24 44 40 31.5 40 20C40 11.163 32.837 4 24 4Z" fill="white" fill-opacity="0.9"/><circle cx="24" cy="20" r="7" fill="#0D9488"/><path d="M20 17L23 20L27 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="sb-logo-txt"><h3>KANDA PALU</h3><span>Surveillance Épidémio.</span></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Principal</div>
+    <a class="nav-a" href="main2.html"><span class="ic">📊</span> Tableau de bord</a>
+    <a class="nav-a" href="main2.html"><span class="ic">🏥</span> Gestion Patients <span class="nb" id="nb-count">10</span></a>
+    <a class="nav-a active" href="main1.html"><span class="ic">➕</span> Ajouter un Patient</a>
+    <div class="sb-sec">Analyse</div>
+    <a class="nav-a" href="main2.html#carte"><span class="ic">🗺️</span> Carte Épidémio.</a>
+    <a class="nav-a" href="main2.html#alertes"><span class="ic">🔔</span> Alertes <span class="nb">3</span></a>
+    <div class="sb-sec">Espace</div>
+    <a class="nav-a" href="accueil-citoyen.html"><span class="ic">🏘️</span> Espace Citoyen</a>
+    <a class="nav-a" href="main3.html"><span class="ic">⚙️</span> Profil & Paramètres</a>
+  </nav>
+  <div class="sb-user">
+    <div class="ava" id="sb-ava">JD</div>
+    <div class="ava-info"><h4 id="sb-name">Dr. Jean Dupont</h4><span id="sb-role">Médecin Épidémiologiste</span></div>
+    <span class="logout-ic" onclick="logout()">🚪</span>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="tb-l">
+      <h2>Ajouter un Patient</h2>
+      <span id="tb-date"></span>
+    </div>
+    <div class="tb-r">
+      <div class="tb-search">🔍 Rechercher...</div>
+      <div class="tb-notif">🔔<span class="notif-dot"></span></div>
+      <div class="ava" id="top-ava">JD</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="ph">
+      <h1>Ajouter un Patient</h1>
+      <p>Saisissez les informations cliniques du nouveau cas</p>
+    </div>
+
+    <div class="form-wrap">
+
+      <!-- Section 1: Informations Personnelles -->
+      <div class="section-card">
+        <div class="section-card-head">
+          <div class="sci sci-blue">👤</div>
+          <h3>Informations Personnelles</h3>
+        </div>
+        <div class="row2">
+          <div class="fg">
+            <label>Nom Complet</label>
+            <input type="text" id="f-nom" placeholder="Ex: Jean Dupont"/>
+          </div>
+          <div class="fg">
+            <label>Date de Naissance</label>
+            <input type="date" id="f-dob"/>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="fg">
+            <label>Genre</label>
+            <select id="f-genre">
+              <option value="">Sélectionner le genre</option>
+              <option value="M">Masculin</option>
+              <option value="F">Féminin</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Numéro de Téléphone</label>
+            <input type="tel" id="f-tel" placeholder="+243 ..."/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Localisation et Santé -->
+      <div class="section-card">
+        <div class="section-card-head">
+          <div class="sci sci-teal">🛡️</div>
+          <h3>Localisation et Santé</h3>
+        </div>
+
+        <div class="fg">
+          <label>District Sanitaire</label>
+          <select id="f-district">
+            <option value="">Choisir un district</option>
+            <optgroup label="Région du Littoral">
+              <option>Douala I (Bonanjo)</option>
+              <option>Douala I (Akwa)</option>
+              <option>Douala II</option>
+              <option>Douala III</option>
+              <option>Douala IV</option>
+              <option>Douala V</option>
+            </optgroup>
+            <optgroup label="Région du Centre">
+              <option>Yaoundé I</option>
+              <option>Yaoundé II</option>
+              <option>Yaoundé III</option>
+              <option>Yaoundé IV</option>
+              <option>Yaoundé V</option>
+              <option>Yaoundé VI</option>
+            </optgroup>
+            <optgroup label="Région de l'Ouest">
+              <option>Bafoussam I</option>
+              <option>Bafoussam II</option>
+              <option>Bafoussam III</option>
+            </optgroup>
+            <optgroup label="Région du Nord">
+              <option>Garoua I</option>
+              <option>Garoua II</option>
+            </optgroup>
+            <optgroup label="Région de l'Adamaoua">
+              <option>Ngaoundéré I</option>
+              <option>Ngaoundéré II</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="fg">
+          <label>Niveau de Sévérité</label>
+          <div class="sev-row">
+            <button class="sev-btn" onclick="setSev(this,'f')" id="sev-f">
+              <span class="sev-dot sev-dot-g"></span> Faible
+            </button>
+            <button class="sev-btn" onclick="setSev(this,'m')" id="sev-m">
+              <span class="sev-dot sev-dot-y"></span> Modéré
+            </button>
+            <button class="sev-btn" onclick="setSev(this,'c')" id="sev-c">
+              <span class="sev-dot sev-dot-r"></span> Critique
+            </button>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Symptômes Observés</label>
+          <textarea id="f-symp" placeholder="Décrivez les symptômes observés : fièvre, frissons, céphalées, vomissements, convulsions..."></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-save" onclick="savePatient()">
+          💾 Enregistrer le Patient
+        </button>
+        <button class="btn-cancel" onclick="window.location.href='main2.html'">Annuler</button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast">
+  <span id="ti" style="font-size:1.3rem">✅</span>
+  <div class="toast-txt"><strong id="tt"></strong><span id="tm"></span></div>
+</div>
+
+<script>
+let selSev = '';
+function setSev(btn, k) {
+  selSev = k;
+  ['f','m','c'].forEach(id => {
+    const b = document.getElementById('sev-'+id);
+    b.className = 'sev-btn';
+  });
+  const cls = {f:'sel-f',m:'sel-m',c:'sel-c'};
+  btn.classList.add(cls[k]);
+}
+function showToast(icon,title,msg,color='var(--teal2)') {
+  const t=document.getElementById('toast');
+  t.style.borderLeftColor=color;
+  document.getElementById('ti').textContent=icon;
+  document.getElementById('tt').textContent=title;
+  document.getElementById('tm').textContent=msg;
+  t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3400);
+}
+function savePatient() {
+  const nom=document.getElementById('f-nom').value,
+        dob=document.getElementById('f-dob').value,
+        genre=document.getElementById('f-genre').value,
+        district=document.getElementById('f-district').value,
+        symp=document.getElementById('f-symp').value;
+  if(!nom||!dob||!genre||!district||!selSev) {
+    showToast('⚠️','Champs manquants','Veuillez remplir tous les champs obligatoires.','var(--accent)'); return;
+  }
+  const patients = JSON.parse(localStorage.getItem('kp_patients')||'[]');
+  const birth = new Date(dob), today = new Date();
+  const age = today.getFullYear()-birth.getFullYear();
+  const sevMap = {f:'Faible',m:'Modéré',c:'Critique'};
+  const d=new Date(), ds=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+  const newId = 'P'+String(patients.length+1).padStart(3,'0');
+  patients.push({id:newId,nom,age,genre,district,admission:ds,severite:sevMap[selSev],symptoms:symp||'Aucun symptôme noté.',tel:document.getElementById('f-tel').value});
+  localStorage.setItem('kp_patients',JSON.stringify(patients));
+  showToast('✅','Patient enregistré !',`${nom} ajouté avec l'ID ${newId}`);
+  setTimeout(()=>window.location.href='main2.html',1600);
+}
+function logout(){localStorage.removeItem('kp_session');window.location.href='index.html';}
+function initUser(){
+  const s=JSON.parse(localStorage.getItem('kp_session')||'{}');
+  const name=s.name||'Dr. Jean Dupont';
+  const ini=name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('sb-ava').textContent=ini;
+  document.getElementById('top-ava').textContent=ini;
+  document.getElementById('sb-name').textContent=name;
+  const roles={medecin:'Médecin Épidémiologiste',infirmier:'Infirmier(e)',admin:'Administrateur',citoyen:'Citoyen'};
+  document.getElementById('sb-role').textContent=roles[s.role]||'Médecin Épidémiologiste';
+  const patients=JSON.parse(localStorage.getItem('kp_patients')||'[]');
+  if(document.getElementById('nb-count')) document.getElementById('nb-count').textContent=patients.length||10;
+}
+function setDate(){
+  document.getElementById('tb-date').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+window.onload=()=>{initUser();setDate();};
+</script>
+</body>
+</html>

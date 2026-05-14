@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>KANDA PALU – Accueil Citoyen</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#0A1628;--blue:#1B3A7A;--blue2:#2563EB;
+  --teal:#0D9488;--teal2:#14B8A6;
+  --accent:#F59E0B;--red:#EF4444;--green:#10B981;
+  --bg:#F1F5FB;--white:#fff;--gray:#64748B;--gray2:#94A3B8;
+  --border:#E2E8F0;--text:#1E293B;--sbar:260px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);display:flex;min-height:100vh;color:var(--text);}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{width:var(--sbar);background:var(--navy);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100;}
+.sb-logo{padding:26px 22px 20px;display:flex;align-items:center;gap:11px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.sb-logo-icon{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--teal2),var(--teal));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px rgba(13,148,136,0.4);}
+.sb-logo-icon svg{width:22px;height:22px;}
+.sb-logo-txt h3{font-family:'Bricolage Grotesque',sans-serif;font-size:0.95rem;font-weight:800;color:#fff;letter-spacing:2px;}
+.sb-logo-txt span{font-size:0.65rem;color:rgba(255,255,255,0.35);}
+.sb-nav{flex:1;padding:18px 0;overflow-y:auto;}
+.sb-sec{padding:10px 22px 5px;font-size:0.62rem;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,0.28);font-weight:700;}
+.nav-a{display:flex;align-items:center;gap:11px;padding:11px 22px;color:rgba(255,255,255,0.5);font-size:0.85rem;font-weight:500;text-decoration:none;border-left:3px solid transparent;transition:all 0.2s;cursor:pointer;}
+.nav-a:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.85);}
+.nav-a.active{background:rgba(20,184,166,0.12);color:var(--teal2);border-left-color:var(--teal2);}
+.nav-a .ic{width:20px;text-align:center;font-size:1rem;}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:0.65rem;padding:2px 7px;border-radius:20px;font-weight:700;}
+.sb-user{padding:18px 22px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:10px;}
+.ava{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--teal2),var(--blue2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;}
+.ava-info h4{color:#fff;font-size:0.8rem;font-weight:600;}
+.ava-info span{color:rgba(255,255,255,0.35);font-size:0.68rem;}
+.logout-ic{margin-left:auto;cursor:pointer;color:rgba(255,255,255,0.3);font-size:1rem;transition:color 0.2s;}
+.logout-ic:hover{color:var(--red);}
+
+/* ═══ MAIN ═══ */
+.main{margin-left:var(--sbar);flex:1;display:flex;flex-direction:column;}
+.topbar{background:var(--white);padding:14px 30px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,0.04);}
+.tb-l h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--navy);}
+.tb-l span{font-size:0.77rem;color:var(--gray2);margin-top:1px;display:block;}
+.tb-r{display:flex;align-items:center;gap:12px;}
+.tb-search{display:flex;align-items:center;gap:7px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:0.82rem;color:var(--gray);}
+.tb-notif{width:36px;height:36px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;font-size:1rem;}
+.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid #fff;}
+
+/* ═══ CONTENT ═══ */
+.content{padding:28px 30px;flex:1;}
+
+/* GREETING HEADER — like the mockup */
+.greeting-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;
+}
+.greeting-bar .logo-txt{
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-size:1rem;font-weight:800;color:var(--navy);letter-spacing:2px;
+  display:flex;align-items:center;gap:8px;
+}
+.greeting-bar .logo-txt .li{
+  width:28px;height:28px;border-radius:7px;
+  background:linear-gradient(135deg,var(--teal2),var(--teal));
+  display:flex;align-items:center;justify-content:center;font-size:0.75rem;
+}
+.profile-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal2),var(--blue2));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:0.78rem;cursor:pointer;
+}
+
+/* BONJOUR SECTION */
+.bonjour-section{margin-bottom:20px;}
+.bonjour-section h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);}
+.bonjour-section p{font-size:0.82rem;color:var(--gray);margin-top:3px;}
+.location-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;padding:5px 12px;margin-top:10px;
+  font-size:0.78rem;color:var(--gray);font-weight:500;
+}
+
+/* STATUT LOCAL CARD */
+.status-card{
+  background:var(--white);border-radius:18px;
+  padding:22px;box-shadow:0 2px 16px rgba(10,22,40,0.06);
+  margin-bottom:18px;
+}
+.statut-tag{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(16,185,129,0.1);color:var(--green);
+  border-radius:8px;padding:5px 12px;margin-bottom:14px;
+  font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;
+}
+.statut-tag .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.status-desc{font-size:0.84rem;color:var(--gray);line-height:1.65;margin-bottom:16px;}
+
+.status-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.status-mini{
+  background:var(--bg);border-radius:12px;padding:14px;
+  border:1px solid var(--border);
+}
+.status-mini .sm-lbl{font-size:0.72rem;color:var(--gray2);font-weight:700;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:6px;}
+.status-mini .sm-val{font-size:0.88rem;font-weight:700;display:flex;align-items:center;gap:6px;}
+.sm-val.good{color:var(--green);}
+.sm-val.mod{color:#B45309;}
+
+/* ACTION CARDS */
+.action-card{
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  border-radius:18px;padding:22px;margin-bottom:14px;
+  color:#fff;cursor:pointer;transition:transform 0.2s;
+  position:relative;overflow:hidden;
+}
+.action-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.05);}
+.action-card:hover{transform:translateY(-2px);}
+.action-card .ac-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.action-card .ac-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.action-card .ac-lbl{font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;opacity:0.7;font-weight:700;}
+.action-card h4{font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:700;margin-bottom:6px;}
+.action-card p{font-size:0.8rem;opacity:0.7;line-height:1.5;}
+.action-card .ac-link{margin-top:12px;font-size:0.8rem;font-weight:800;color:var(--teal2);letter-spacing:0.5px;display:inline-flex;align-items:center;gap:5px;}
+
+.action-card-light{
+  background:var(--white);border-radius:18px;padding:22px;
+  box-shadow:0 2px 16px rgba(10,22,40,0.06);margin-bottom:14px;
+  cursor:pointer;transition:transform 0.2s;
+}
+.action-card-light:hover{transform:translateY(-2px);}
+.action-card-light .ac-icon-l{font-size:1.4rem;margin-bottom:10px;}
+.action-card-light h4{font-family:'Bricolage Grotesque',sans-serif;font-size:0.95rem;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.action-card-light p{font-size:0.8rem;color:var(--gray);line-height:1.5;}
+.action-card-light .ac-btn{
+  display:inline-block;margin-top:12px;
+  border:1.5px solid var(--blue2);color:var(--blue2);
+  padding:7px 16px;border-radius:8px;
+  font-size:0.78rem;font-weight:700;
+  letter-spacing:0.5px;transition:all 0.2s;
+}
+.action-card-light:hover .ac-btn{background:var(--blue2);color:#fff;}
+
+/* NEWS CARDS */
+.news-section{margin-top:22px;}
+.news-section h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.news-card{
+  background:var(--white);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 14px rgba(10,22,40,0.06);
+  margin-bottom:14px;display:flex;cursor:pointer;transition:transform 0.2s;
+}
+.news-card:hover{transform:translateY(-2px);}
+.news-img{width:110px;min-width:110px;height:95px;object-fit:cover;background:linear-gradient(135deg,var(--bg),var(--border));display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.news-body{padding:14px;}
+.news-type{font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.news-type.local{color:var(--teal);}
+.news-type.update{color:var(--blue2);}
+.news-type.alert-t{color:var(--red);}
+.news-card h4{font-size:0.88rem;font-weight:700;color:var(--navy);margin-bottom:4px;line-height:1.3;}
+.news-card p{font-size:0.77rem;color:var(--gray);line-height:1.4;}
+
+/* SIGNALEMENT MODAL */
+.overlay{position:fixed;inset:0;background:rgba(10,22,40,0.55);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;}
+.overlay.on{display:flex;}
+.modal{background:var(--white);border-radius:20px;padding:28px;width:90%;max-width:520px;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.modal-head h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);}
+.modal-close{width:32px;height:32px;border-radius:9px;border:none;background:var(--bg);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.fg{margin-bottom:15px;}
+.fg label{display:block;font-size:0.71rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:6px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;color:var(--text);background:var(--white);outline:none;transition:all 0.2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(20,184,166,0.12);}
+.fg textarea{resize:vertical;min-height:80px;}
+.symptom-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.chip{padding:6px 13px;border:1.5px solid var(--border);border-radius:20px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--gray);background:var(--white);}
+.chip.on{border-color:var(--teal2);background:rgba(20,184,166,0.1);color:var(--teal);}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+.btn-cancel{padding:10px 20px;border:1.5px solid var(--border);border-radius:10px;background:var(--white);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;color:var(--gray);}
+.btn-save{padding:10px 22px;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;border:none;border-radius:10px;font-family:'Bricolage Grotesque',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,99,235,0.3);}
+
+/* TRENDING TAGS */
+.trending-section{margin-top:22px;}
+.trending-section h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:12px;}
+.tags{display:flex;flex-wrap:wrap;gap:9px;}
+.tag{padding:7px 15px;background:var(--white);border:1.5px solid var(--border);border-radius:20px;font-size:0.78rem;font-weight:600;color:var(--blue2);cursor:pointer;transition:all 0.2s;box-shadow:0 1px 4px rgba(10,22,40,0.05);}
+.tag:hover{background:var(--blue2);color:#fff;border-color:var(--blue2);}
+
+/* TOAST */
+.toast{position:fixed;top:20px;right:20px;min-width:270px;background:var(--white);border-radius:14px;padding:13px 18px;box-shadow:0 12px 40px rgba(0,0,0,0.12);display:flex;align-items:center;gap:11px;z-index:9999;opacity:0;transform:translateX(40px);transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);border-left:4px solid var(--teal2);}
+.toast.on{opacity:1;transform:translateX(0);}
+.toast-txt strong{display:block;color:var(--navy);font-size:0.88rem;}
+.toast-txt span{color:var(--gray);font-size:0.77rem;}
+
+/* 2-col layout for actions */
+.action-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon"><svg viewBox="0 0 48 48" fill="none"><path d="M24 4C15.163 4 8 11.163 8 20C8 31.5 24 44 24 44C24 44 40 31.5 40 20C40 11.163 32.837 4 24 4Z" fill="white" fill-opacity="0.9"/><circle cx="24" cy="20" r="7" fill="#0D9488"/><path d="M20 17L23 20L27 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="sb-logo-txt"><h3>KANDA PALU</h3><span>Surveillance Épidémio.</span></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Principal</div>
+    <a class="nav-a" href="main2.html"><span class="ic">📊</span> Tableau de bord</a>
+    <a class="nav-a" href="main2.html"><span class="ic">🏥</span> Gestion Patients <span class="nb" id="nb-count">10</span></a>
+    <a class="nav-a" href="main1.html"><span class="ic">➕</span> Ajouter un Patient</a>
+    <div class="sb-sec">Analyse</div>
+    <a class="nav-a" href="main2.html#carte"><span class="ic">🗺️</span> Carte Épidémio.</a>
+    <a class="nav-a" href="main2.html#alertes"><span class="ic">🔔</span> Alertes <span class="nb">3</span></a>
+    <div class="sb-sec">Espace</div>
+    <a class="nav-a active" href="accueil-citoyen.html"><span class="ic">🏘️</span> Espace Citoyen</a>
+    <a class="nav-a" href="main3.html"><span class="ic">⚙️</span> Profil & Paramètres</a>
+  </nav>
+  <div class="sb-user">
+    <div class="ava" id="sb-ava">JD</div>
+    <div class="ava-info"><h4 id="sb-name">Dr. Jean Dupont</h4><span id="sb-role">Médecin Épidémiologiste</span></div>
+    <span class="logout-ic" onclick="logout()">🚪</span>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="tb-l">
+      <h2>Accueil Citoyen</h2>
+      <span id="tb-date"></span>
+    </div>
+    <div class="tb-r">
+      <div class="tb-search">🔍 Rechercher...</div>
+      <div class="tb-notif">🔔<span class="notif-dot"></span></div>
+      <div class="ava" id="top-ava">JD</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- GREETING BAR — matches mockup top -->
+    <div class="greeting-bar">
+      <div class="logo-txt">
+        <div class="li">🦟</div>
+        KANDA PALU
+      </div>
+      <div class="profile-btn" id="top-profile-btn" onclick="window.location.href='main3.html'">JD</div>
+    </div>
+
+    <!-- BONJOUR -->
+    <div class="bonjour-section">
+      <h3>Bonjour, <span id="citizen-name">Alex</span> 👋</h3>
+      <p>Voici les dernières informations de santé publique pour votre région.</p>
+      <div class="location-tag">📍 <span>Springfield Métropolitain</span></div>
+    </div>
+
+    <!-- STATUT LOCAL -->
+    <div class="status-card">
+      <div class="statut-tag">
+        <span class="dot"></span>
+        STATUT LOCAL
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+        <span style="font-size:1.3rem;">✅</span>
+        <span style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.05rem;font-weight:700;color:var(--navy);">Santé communautaire : Sûre</span>
+      </div>
+      <p class="status-desc">Les taux de transmission de la grippe saisonnière et d'autres maladies transmissibles restent faibles dans votre région. Aucune urgence de santé publique active n'est signalée aujourd'hui.</p>
+
+      <div class="status-mini-grid">
+        <div class="status-mini">
+          <div class="sm-lbl">Qualité de l'air</div>
+          <div class="sm-val good">🌿 <span>Bonne</span> <small style="color:var(--gray2);font-weight:400;font-size:0.72rem;">Qualité de l'air</small></div>
+        </div>
+        <div class="status-mini">
+          <div class="sm-lbl">Taux de pollen</div>
+          <div class="sm-val mod">🌼 <span>Modéré</span> <small style="color:var(--gray2);font-weight:400;font-size:0.72rem;">Arbres/Graminées</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIGNALER DES SYMPTÔMES — dark card like mockup -->
+    <div class="action-card" onclick="openSignalement()">
+      <div class="ac-top">
+        <div class="ac-icon">🩺</div>
+        <span class="ac-lbl">Action citoyenne</span>
+      </div>
+      <h4>Signaler des symptômes</h4>
+      <p>Aidez-nous à suivre les tendances de santé locales en signalant en toute sécurité de nouveaux symptômes.</p>
+      <div class="ac-link">COMMENCER <span>→</span></div>
+    </div>
+
+    <!-- TROUVER UNE CLINIQUE -->
+    <div class="action-card-light" onclick="openClinique()">
+      <div class="ac-icon-l">🗺️</div>
+      <h4>Trouver une clinique</h4>
+      <p>Localisez les sites de vaccination, les centres de dépistage ou les médecins généralistes à proximité.</p>
+      <div class="ac-btn">RECHERCHER SUR LA CARTE</div>
+    </div>
+
+    <!-- NEWS ARTICLES — like mockup -->
+    <div class="news-section">
+      <h3>Actualités Santé</h3>
+
+      <div class="news-card" onclick="showToast('📰','Article ouvert','Guide allergies printanières 2026')">
+        <div class="news-img">🤧</div>
+        <div class="news-body">
+          <div class="news-type local">STATUT LOCAL</div>
+          <h4>Spring Allergy Guide</h4>
+          <p>How to manage symptoms during the peak pollen season...</p>
+        </div>
+      </div>
+
+      <div class="news-card" onclick="showToast('💧','Rapport ouvert','Rapport qualité eau municipale 2026')">
+        <div class="news-img">💧</div>
+        <div class="news-body">
+          <div class="news-type update">UPDATE</div>
+          <h4>Water Quality Report</h4>
+          <p>The annual municipal water safety audit results are now public...</p>
+        </div>
+      </div>
+
+      <div class="news-card" onclick="showToast('🦟','Article ouvert','Prévention paludisme — Saison des pluies')">
+        <div class="news-img">🦟</div>
+        <div class="news-body">
+          <div class="news-type alert-t">ALERTE SANTÉ</div>
+          <h4>Prévention Paludisme — Saison des Pluies</h4>
+          <p>Mesures préventives recommandées par le Ministère de la Santé...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRENDING TAGS — exact match to mockup -->
+    <div class="trending-section">
+      <h3>Sujets Tendances</h3>
+      <div class="tags">
+        <span class="tag">#SaisonGrippe2026</span>
+        <span class="tag">#AlimentationSaine</span>
+        <span class="tag">#SensibilisationSantéMentale</span>
+        <span class="tag">#VaccinsVoyage</span>
+        <span class="tag">#YogaCommunautaire</span>
+        <span class="tag">#PaludismePrévention</span>
+        <span class="tag">#EauPotable</span>
+        <span class="tag">#MoustiquaireImprégnée</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- SIGNALEMENT MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🩺 Signaler des Symptômes</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div style="background:rgba(20,184,166,0.07);border:1px solid rgba(20,184,166,0.2);border-radius:10px;padding:12px 14px;margin-bottom:18px;">
+      <p style="font-size:0.8rem;color:var(--teal);font-weight:600;">🔒 Vos données sont anonymisées et protégées. Elles servent uniquement à la surveillance épidémiologique.</p>
+    </div>
+
+    <div class="fg">
+      <label>Votre District</label>
+      <select>
+        <option value="">Sélectionnez votre district...</option>
+        <option>Douala I (Akwa)</option><option>Douala II</option>
+        <option>Yaoundé I</option><option>Yaoundé II</option>
+        <option>Bafoussam I</option><option>Garoua I</option>
+      </select>
+    </div>
+
+    <div class="fg">
+      <label>Symptômes ressentis</label>
+      <div class="symptom-chips">
+        <span class="chip" onclick="toggleChip(this)">🌡️ Fièvre</span>
+        <span class="chip" onclick="toggleChip(this)">🥶 Frissons</span>
+        <span class="chip" onclick="toggleChip(this)">🤕 Céphalées</span>
+        <span class="chip" onclick="toggleChip(this)">🤢 Nausées/Vomiss.</span>
+        <span class="chip" onclick="toggleChip(this)">😓 Fatigue intense</span>
+        <span class="chip" onclick="toggleChip(this)">💪 Douleurs musculaires</span>
+        <span class="chip" onclick="toggleChip(this)">😮‍💨 Difficultés respiratoires</span>
+        <span class="chip" onclick="toggleChip(this)">🫀 Palpitations</span>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>Depuis combien de jours ?</label>
+      <select>
+        <option>Moins de 24h</option><option>1 – 2 jours</option>
+        <option>3 – 5 jours</option><option>Plus d'une semaine</option>
+      </select>
+    </div>
+
+    <div class="fg">
+      <label>Informations complémentaires</label>
+      <textarea placeholder="Décrivez vos symptômes plus précisément (facultatif)..."></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+      <button class="btn-save" onclick="submitSignalement()">📤 Envoyer le Signalement</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLINIQUE MODAL -->
+<div class="overlay" id="overlay-clinique">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🗺️ Trouver une Clinique</h3>
+      <button class="modal-close" onclick="closeClinique()">✕</button>
+    </div>
+    <div class="fg"><label>Votre localisation</label><input type="text" placeholder="Ex: Douala, Akwa..." value="Douala, Cameroun"/></div>
+    <div class="fg"><label>Type de service</label>
+      <select>
+        <option>Médecin généraliste</option>
+        <option>Centre de dépistage paludisme</option>
+        <option>Site de vaccination</option>
+        <option>Pharmacie</option>
+        <option>Hôpital / Centre hospitalier</option>
+      </select>
+    </div>
+    <div style="background:var(--bg);border-radius:12px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;border:1.5px dashed var(--border);">
+      <div style="text-align:center;color:var(--gray2);">
+        <div style="font-size:2.5rem;margin-bottom:8px;">🗺️</div>
+        <p style="font-size:0.82rem;font-weight:600;">Carte interactive</p>
+        <p style="font-size:0.75rem;">Disponible dans la version mobile</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="background:var(--bg);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="showToast('🏥','Clinique trouvée','Centre de Santé Akwa — 0.8 km')">
+        <span style="font-size:1.4rem;">🏥</span>
+        <div><strong style="font-size:0.88rem;color:var(--navy);">Centre de Santé Akwa</strong><p style="font-size:0.76rem;color:var(--gray);">Douala I — 0.8 km · Ouvert 24h/24</p></div>
+        <span style="margin-left:auto;color:var(--teal);font-size:0.8rem;font-weight:700;">0.8 km</span>
+      </div>
+      <div style="background:var(--bg);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="showToast('💊','Pharmacie','Pharmacie Centrale — 1.2 km')">
+        <span style="font-size:1.4rem;">💊</span>
+        <div><strong style="font-size:0.88rem;color:var(--navy);">Pharmacie Centrale</strong><p style="font-size:0.76rem;color:var(--gray);">Akwa — 1.2 km · Ouvert jusqu'à 22h</p></div>
+        <span style="margin-left:auto;color:var(--teal);font-size:0.8rem;font-weight:700;">1.2 km</span>
+      </div>
+      <div style="background:var(--bg);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="showToast('🏨','Hôpital trouvé','Hôpital Laquintinie — 2.1 km')">
+        <span style="font-size:1.4rem;">🏨</span>
+        <div><strong style="font-size:0.88rem;color:var(--navy);">Hôpital Laquintinie</strong><p style="font-size:0.76rem;color:var(--gray);">Douala — 2.1 km · Urgences 24h/24</p></div>
+        <span style="margin-left:auto;color:var(--teal);font-size:0.8rem;font-weight:700;">2.1 km</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeClinique()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="ti" style="font-size:1.3rem">✅</span><div class="toast-txt"><strong id="tt"></strong><span id="tm"></span></div></div>
+
+<script>
+function toggleChip(el){el.classList.toggle('on');}
+function openSignalement(){document.getElementById('overlay').classList.add('on');}
+function closeModal(){document.getElementById('overlay').classList.remove('on');}
+function openClinique(){document.getElementById('overlay-clinique').classList.add('on');}
+function closeClinique(){document.getElementById('overlay-clinique').classList.remove('on');}
+function submitSignalement(){
+  closeModal();
+  showToast('✅','Signalement envoyé !','Merci pour votre contribution à la santé publique.');
+}
+function showToast(icon,title,msg,color='var(--teal2)'){
+  const t=document.getElementById('toast');t.style.borderLeftColor=color;
+  document.getElementById('ti').textContent=icon;
+  document.getElementById('tt').textContent=title;
+  document.getElementById('tm').textContent=msg;
+  t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3400);
+}
+function initUser(){
+  const s=JSON.parse(localStorage.getItem('kp_session')||'{}');
+  const name=s.name||'Dr. Jean Dupont';
+  const firstName=name.split(' ')[0].replace('Dr.','').trim()||'Alex';
+  const ini=name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('sb-ava').textContent=ini;
+  document.getElementById('top-ava').textContent=ini;
+  document.getElementById('top-profile-btn').textContent=ini;
+  document.getElementById('sb-name').textContent=name;
+  document.getElementById('citizen-name').textContent=firstName;
+  const roles={medecin:'Médecin Épidémiologiste',infirmier:'Infirmier(e)',admin:'Administrateur',citoyen:'Citoyen'};
+  document.getElementById('sb-role').textContent=roles[s.role]||'Médecin Épidémiologiste';
+  const pts=JSON.parse(localStorage.getItem('kp_patients')||'[]');
+  document.getElementById('nb-count').textContent=pts.length||10;
+}
+function logout(){localStorage.removeItem('kp_session');window.location.href='index.html';}
+window.onload=()=>{
+  initUser();
+  document.getElementById('tb-date').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+};
+</script>
+</body>
+</html>
