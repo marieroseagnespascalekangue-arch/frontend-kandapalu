@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>KANDA PALU – Gestion des Patients</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#0A1628;--blue:#1B3A7A;--blue2:#2563EB;
+  --teal:#0D9488;--teal2:#14B8A6;
+  --accent:#F59E0B;--red:#EF4444;--green:#10B981;
+  --bg:#F1F5FB;--white:#fff;--gray:#64748B;--gray2:#94A3B8;
+  --border:#E2E8F0;--text:#1E293B;--sbar:260px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);display:flex;min-height:100vh;color:var(--text);}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{width:var(--sbar);background:var(--navy);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100;}
+.sb-logo{padding:26px 22px 20px;display:flex;align-items:center;gap:11px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.sb-logo-icon{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--teal2),var(--teal));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px rgba(13,148,136,0.4);}
+.sb-logo-icon svg{width:22px;height:22px;}
+.sb-logo-txt h3{font-family:'Bricolage Grotesque',sans-serif;font-size:0.95rem;font-weight:800;color:#fff;letter-spacing:2px;}
+.sb-logo-txt span{font-size:0.65rem;color:rgba(255,255,255,0.35);}
+.sb-nav{flex:1;padding:18px 0;overflow-y:auto;}
+.sb-sec{padding:10px 22px 5px;font-size:0.62rem;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,0.28);font-weight:700;}
+.nav-a{display:flex;align-items:center;gap:11px;padding:11px 22px;color:rgba(255,255,255,0.5);font-size:0.85rem;font-weight:500;text-decoration:none;border-left:3px solid transparent;transition:all 0.2s;cursor:pointer;}
+.nav-a:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.85);}
+.nav-a.active{background:rgba(20,184,166,0.12);color:var(--teal2);border-left-color:var(--teal2);}
+.nav-a .ic{width:20px;text-align:center;font-size:1rem;}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:0.65rem;padding:2px 7px;border-radius:20px;font-weight:700;}
+.sb-user{padding:18px 22px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:10px;}
+.ava{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--teal2),var(--blue2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;}
+.ava-info h4{color:#fff;font-size:0.8rem;font-weight:600;}
+.ava-info span{color:rgba(255,255,255,0.35);font-size:0.68rem;}
+.logout-ic{margin-left:auto;cursor:pointer;color:rgba(255,255,255,0.3);font-size:1rem;transition:color 0.2s;}
+.logout-ic:hover{color:var(--red);}
+
+/* ═══ MAIN ═══ */
+.main{margin-left:var(--sbar);flex:1;display:flex;flex-direction:column;}
+.topbar{background:var(--white);padding:14px 30px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,0.04);}
+.tb-l h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--navy);}
+.tb-l span{font-size:0.77rem;color:var(--gray2);margin-top:1px;display:block;}
+.tb-r{display:flex;align-items:center;gap:12px;}
+.tb-search{display:flex;align-items:center;gap:7px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:0.82rem;color:var(--gray);}
+.tb-notif{width:36px;height:36px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;font-size:1rem;}
+.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid #fff;}
+
+/* ═══ PAGES ═══ */
+.page{display:none;padding:28px 30px;animation:fadeUp 0.3s ease;}
+.page.on{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ STATS CARDS ═══ */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.stat{background:var(--white);border-radius:18px;padding:20px 22px;box-shadow:0 2px 16px rgba(10,22,40,0.06);position:relative;overflow:hidden;transition:transform 0.2s;}
+.stat:hover{transform:translateY(-3px);}
+.stat::after{content:'';position:absolute;top:0;left:0;right:0;height:3.5px;border-radius:18px 18px 0 0;}
+.stat.s1::after{background:linear-gradient(90deg,var(--blue2),var(--teal2));}
+.stat.s2::after{background:linear-gradient(90deg,var(--red),#F87171);}
+.stat.s3::after{background:linear-gradient(90deg,var(--accent),#FCD34D);}
+.stat.s4::after{background:linear-gradient(90deg,var(--green),#6EE7B7);}
+.stat-lbl{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.9px;color:var(--gray2);margin-bottom:10px;}
+.stat-val{font-family:'Bricolage Grotesque',sans-serif;font-size:2.1rem;font-weight:800;color:var(--navy);line-height:1;}
+.stat-sub{font-size:0.76rem;color:var(--gray);margin-top:5px;}
+.stat-change{font-size:0.75rem;font-weight:700;margin-top:3px;}
+.stat-change.up{color:var(--red);}
+.stat-change.dn{color:var(--green);}
+.stat-ico{position:absolute;top:18px;right:18px;font-size:1.6rem;opacity:0.15;}
+
+/* ═══ PATIENTS TABLE ═══ */
+.card{background:var(--white);border-radius:18px;padding:24px;box-shadow:0 2px 16px rgba(10,22,40,0.06);margin-bottom:22px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.card-head h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1.05rem;font-weight:700;color:var(--navy);}
+.badge{padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:700;}
+.badge-blue{background:rgba(37,99,235,0.1);color:var(--blue2);}
+.badge-red{background:rgba(239,68,68,0.1);color:var(--red);}
+.badge-green{background:rgba(16,185,129,0.1);color:var(--green);}
+.badge-amber{background:rgba(245,158,11,0.1);color:#B45309;}
+
+.tbl-actions{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.tbl-search{flex:1;min-width:200px;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;color:var(--text);outline:none;background:var(--white);}
+.tbl-search:focus{border-color:var(--teal2);}
+.tbl-filter{padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.83rem;color:var(--text);background:var(--white);outline:none;cursor:pointer;}
+.btn-add{padding:10px 18px;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;border:none;border-radius:10px;font-family:'Bricolage Grotesque',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.btn-add:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,99,235,0.3);}
+
+table{width:100%;border-collapse:collapse;}
+thead tr{border-bottom:2px solid var(--bg);}
+th{padding:10px 14px;text-align:left;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.9px;color:var(--gray2);}
+td{padding:13px 14px;font-size:0.85rem;border-bottom:1px solid var(--bg);color:var(--text);}
+tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(241,245,251,0.8);}
+
+.sev-pill{padding:3px 11px;border-radius:20px;font-size:0.71rem;font-weight:700;letter-spacing:0.4px;display:inline-block;}
+.pill-f{background:rgba(16,185,129,0.1);color:var(--green);}
+.pill-m{background:rgba(245,158,11,0.1);color:#B45309;}
+.pill-c{background:rgba(239,68,68,0.1);color:var(--red);}
+.pill-s{background:rgba(20,184,166,0.1);color:var(--teal);}
+
+.act-btns{display:flex;gap:6px;}
+.act-btn{width:29px;height:29px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.82rem;transition:all 0.2s;}
+.ab-view{background:rgba(37,99,235,0.1);color:var(--blue2);}
+.ab-edit{background:rgba(20,184,166,0.1);color:var(--teal);}
+.ab-del{background:rgba(239,68,68,0.1);color:var(--red);}
+.ab-view:hover{background:var(--blue2);color:#fff;}
+.ab-edit:hover{background:var(--teal);color:#fff;}
+.ab-del:hover{background:var(--red);color:#fff;}
+
+/* ═══ CHARTS ═══ */
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:22px;}
+.charts-row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;}
+
+/* ═══ ALERT BANNER ═══ */
+.alert-banner{
+  background:linear-gradient(135deg,#FFF5F5,#FEE2E2);
+  border:1px solid #FCA5A5;border-radius:14px;
+  padding:14px 18px;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;
+}
+.ab-ico{font-size:1.3rem;}
+.ab-txt strong{color:var(--red);font-size:0.87rem;display:block;}
+.ab-txt span{color:#7F1D1D;font-size:0.78rem;}
+.ab-close{margin-left:auto;cursor:pointer;color:var(--gray);font-size:1.1rem;padding:2px 6px;}
+
+/* ═══ CARTE PAGE ═══ */
+.district-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
+.dc{background:var(--white);border-radius:14px;padding:16px;box-shadow:0 2px 12px rgba(10,22,40,0.06);border-left:4px solid transparent;}
+.dc.hi{border-left-color:var(--red);}
+.dc.me{border-left-color:var(--accent);}
+.dc.lo{border-left-color:var(--green);}
+.dc-name{font-weight:700;color:var(--navy);font-size:0.88rem;margin-bottom:6px;}
+.dc-stat{font-size:0.79rem;color:var(--gray);}
+.dc-stat strong{color:var(--navy);}
+.dc-bar{height:5px;background:var(--bg);border-radius:4px;margin-top:9px;overflow:hidden;}
+.dc-fill{height:100%;border-radius:4px;transition:width 0.8s ease;}
+
+/* ═══ ALERTES PAGE ═══ */
+.alert-item{
+  border-radius:12px;padding:16px;margin-bottom:12px;
+  display:flex;gap:14px;align-items:flex-start;
+  transition:transform 0.2s;
+}
+.alert-item:hover{transform:translateX(4px);}
+.ai-ico{font-size:1.5rem;flex-shrink:0;}
+.ai-body{flex:1;}
+.ai-head{display:flex;align-items:center;gap:9px;margin-bottom:5px;}
+.ai-title{font-weight:700;color:var(--navy);font-size:0.88rem;}
+.ai-date{margin-left:auto;font-size:0.73rem;color:var(--gray2);}
+.ai-desc{color:var(--gray);font-size:0.81rem;line-height:1.5;}
+
+/* ═══ MODAL ═══ */
+.overlay{position:fixed;inset:0;background:rgba(10,22,40,0.55);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;}
+.overlay.on{display:flex;}
+.modal{background:var(--white);border-radius:20px;padding:28px;width:90%;max-width:540px;max-height:88vh;overflow-y:auto;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.modal-head h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--navy);}
+.modal-close{width:32px;height:32px;border-radius:9px;border:none;background:var(--bg);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.dg-item p{font-size:0.72rem;color:var(--gray2);text-transform:uppercase;font-weight:700;letter-spacing:0.7px;margin-bottom:4px;}
+.dg-item span{font-size:0.9rem;color:var(--navy);font-weight:600;}
+.detail-symp{background:var(--bg);border-radius:12px;padding:14px;}
+.detail-symp p{font-size:0.72rem;color:var(--gray2);text-transform:uppercase;font-weight:700;letter-spacing:0.7px;margin-bottom:8px;}
+.detail-symp span{font-size:0.86rem;color:var(--text);line-height:1.6;}
+
+/* TOAST */
+.toast{position:fixed;top:20px;right:20px;min-width:270px;background:var(--white);border-radius:14px;padding:13px 18px;box-shadow:0 12px 40px rgba(0,0,0,0.12);display:flex;align-items:center;gap:11px;z-index:9999;opacity:0;transform:translateX(40px);transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);border-left:4px solid var(--teal2);}
+.toast.on{opacity:1;transform:translateX(0);}
+.toast-txt strong{display:block;color:var(--navy);font-size:0.88rem;}
+.toast-txt span{color:var(--gray);font-size:0.77rem;}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon"><svg viewBox="0 0 48 48" fill="none"><path d="M24 4C15.163 4 8 11.163 8 20C8 31.5 24 44 24 44C24 44 40 31.5 40 20C40 11.163 32.837 4 24 4Z" fill="white" fill-opacity="0.9"/><circle cx="24" cy="20" r="7" fill="#0D9488"/><path d="M20 17L23 20L27 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="sb-logo-txt"><h3>KANDA PALU</h3><span>Surveillance Épidémio.</span></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Principal</div>
+    <a class="nav-a" onclick="showPage('dashboard',this)"><span class="ic">📊</span> Tableau de bord</a>
+    <a class="nav-a active" onclick="showPage('patients',this)"><span class="ic">🏥</span> Gestion Patients <span class="nb" id="nb-count">10</span></a>
+    <a class="nav-a" href="main1.html"><span class="ic">➕</span> Ajouter un Patient</a>
+    <div class="sb-sec">Analyse</div>
+    <a class="nav-a" onclick="showPage('carte',this)"><span class="ic">🗺️</span> Carte Épidémio.</a>
+    <a class="nav-a" onclick="showPage('alertes',this)"><span class="ic">🔔</span> Alertes <span class="nb">3</span></a>
+    <div class="sb-sec">Espace</div>
+    <a class="nav-a" href="accueil-citoyen.html"><span class="ic">🏘️</span> Espace Citoyen</a>
+    <a class="nav-a" href="main3.html"><span class="ic">⚙️</span> Profil & Paramètres</a>
+  </nav>
+  <div class="sb-user">
+    <div class="ava" id="sb-ava">JD</div>
+    <div class="ava-info"><h4 id="sb-name">Dr. Jean Dupont</h4><span id="sb-role">Médecin</span></div>
+    <span class="logout-ic" onclick="logout()">🚪</span>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="tb-l">
+      <h2 id="pg-title">Gestion des Patients</h2>
+      <span id="tb-date"></span>
+    </div>
+    <div class="tb-r">
+      <div class="tb-search">🔍 Rechercher...</div>
+      <div class="tb-notif">🔔<span class="notif-dot"></span></div>
+      <div class="ava" id="top-ava">JD</div>
+    </div>
+  </div>
+
+  <!-- ═ DASHBOARD ═ -->
+  <div class="page" id="page-dashboard">
+    <div class="alert-banner" id="alert-ban">
+      <span class="ab-ico">⚠️</span>
+      <div class="ab-txt">
+        <strong>Alerte épidémique — District de Douala II</strong>
+        <span>Augmentation de 47% des cas critiques détectée cette semaine. Intervention urgente recommandée.</span>
+      </div>
+      <span class="ab-close" onclick="this.parentElement.remove()">✕</span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat s1"><span class="stat-ico">🦟</span><div class="stat-lbl">Total Cas Actifs</div><div class="stat-val">1 284</div><div class="stat-sub">Tous districts</div><div class="stat-change up">↑ +8.2% ce mois</div></div>
+      <div class="stat s2"><span class="stat-ico">🚨</span><div class="stat-lbl">Cas Critiques</div><div class="stat-val" id="db-crit">47</div><div class="stat-sub">Nécessitent intervention</div><div class="stat-change up">↑ +12 cette semaine</div></div>
+      <div class="stat s3"><span class="stat-ico">💊</span><div class="stat-lbl">En Traitement</div><div class="stat-val" id="db-trait">892</div><div class="stat-sub">Sous protocole ACT</div><div class="stat-change dn">Stable</div></div>
+      <div class="stat s4"><span class="stat-ico">✅</span><div class="stat-lbl">Guéris ce mois</div><div class="stat-val">345</div><div class="stat-sub">Taux: 73.4%</div><div class="stat-change dn">↑ +5.1%</div></div>
+    </div>
+    <div class="charts-row">
+      <div class="card"><div class="card-head"><h3>Évolution des cas — 2026</h3><span class="badge badge-blue">Mensuel</span></div><canvas id="lineChart" height="110"></canvas></div>
+      <div class="card"><div class="card-head"><h3>Sévérité des cas</h3><span class="badge badge-green">Actuel</span></div><canvas id="doughnut" height="185"></canvas></div>
+    </div>
+    <div class="charts-row2">
+      <div class="card"><div class="card-head"><h3>Top 6 Districts</h3><span class="badge badge-red">Haute priorité</span></div><canvas id="barChart" height="130"></canvas></div>
+      <div class="card"><div class="card-head"><h3>Tranche d'âge touchée</h3><span class="badge badge-amber">Démographie</span></div><canvas id="ageChart" height="130"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ═ PATIENTS ═ -->
+  <div class="page on" id="page-patients">
+    <div class="stats-grid">
+      <div class="stat s1"><span class="stat-ico">👥</span><div class="stat-lbl">Total Patients</div><div class="stat-val" id="st-total">10</div><div class="stat-sub">Enregistrés</div></div>
+      <div class="stat s3"><span class="stat-ico">💊</span><div class="stat-lbl">En Traitement</div><div class="stat-val" id="st-trt">7</div><div class="stat-sub">Faible + Modéré + Critique</div></div>
+      <div class="stat s2"><span class="stat-ico">🚨</span><div class="stat-lbl">État Critique</div><div class="stat-val" id="st-crit">1</div><div class="stat-sub">Urgence médicale</div></div>
+      <div class="stat s4"><span class="stat-ico">✅</span><div class="stat-lbl">Guéris</div><div class="stat-val" id="st-gu">2</div><div class="stat-sub">Post-traitement stable</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h3>Liste des Patients</h3>
+          <p style="font-size:0.78rem;color:var(--gray2);margin-top:2px;">Suivi individuel des cas de paludisme</p>
+        </div>
+        <a href="main1.html" class="btn-add">➕ Ajouter un Patient</a>
+      </div>
+      <div class="tbl-actions">
+        <input class="tbl-search" placeholder="🔍  Rechercher par nom ou ID..." oninput="filterPts(this.value)" id="search-input"/>
+        <select class="tbl-filter" onchange="filterSev(this.value)">
+          <option value="">Tous les statuts</option>
+          <option>Faible</option><option>Modéré</option><option>Critique</option><option>Stable</option>
+        </select>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Nom Complet</th><th>Âge / Genre</th>
+              <th>District</th><th>Admission</th><th>Sévérité</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="pts-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═ CARTE ═ -->
+  <div class="page" id="page-carte">
+    <div class="card-head" style="margin-bottom:16px;">
+      <div><h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.2rem;font-weight:700;color:var(--navy);">🗺️ Carte Épidémiologique — Cameroun</h3><p style="font-size:0.78rem;color:var(--gray2);margin-top:3px;">Répartition des cas de paludisme par district sanitaire</p></div>
+      <span class="badge badge-red">Mise à jour : Aujourd'hui</span>
+    </div>
+    <div class="district-grid" id="district-grid"></div>
+    <div class="card"><div class="card-head"><h3>Comparaison des Districts</h3></div><canvas id="districtChart" height="90"></canvas></div>
+  </div>
+
+  <!-- ═ ALERTES ═ -->
+  <div class="page" id="page-alertes">
+    <div class="card">
+      <div class="card-head">
+        <div><h3>🔔 Alertes Épidémiologiques</h3><p style="font-size:0.78rem;color:var(--gray2);margin-top:2px;">Notifications actives et historique</p></div>
+        <span class="badge badge-red">3 alertes actives</span>
+      </div>
+      <div id="alertes-list"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>👁️ Fiche Patient</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="ti" style="font-size:1.3rem">✅</span><div class="toast-txt"><strong id="tt"></strong><span id="tm"></span></div></div>
+
+<script>
+/* ── DATA ── */
+const defaultPatients = [
+  {id:'P001',nom:'Kamga Jean',age:34,genre:'M',district:'Douala I (Akwa)',admission:'18/01/2026',severite:'Modéré',symptoms:'Fièvre élevée (39.5°C), frissons intenses, céphalées, vomissements répétés. Frottis positif Plasmodium falciparum.'},
+  {id:'P002',nom:'Ngo Marie',age:28,genre:'F',district:'Yaoundé II',admission:'19/01/2026',severite:'Critique',symptoms:'Paludisme grave avec convulsions, hypoglycémie (0.5 g/L), anémie sévère (Hb 5.2 g/dL). Hospitalisation en urgence.'},
+  {id:'P003',nom:'Tchinda Paul',age:12,genre:'M',district:'Bafoussam I',admission:'20/01/2026',severite:'Stable',symptoms:'Fièvre modérée (38.2°C), légère asthénie, légère anémie. Traitement ACT en cours — évolution favorable.'},
+  {id:'P004',nom:'Mvoogo Claire',age:45,genre:'F',district:'Douala III',admission:'20/01/2026',severite:'Modéré',symptoms:'Fièvre intermittente depuis 5 jours, splénomégalie palpable, anorexie. TDR positif.'},
+  {id:'P005',nom:'Fouda Samuel',age:8,genre:'M',district:'Yaoundé I',admission:'21/01/2026',severite:'Critique',symptoms:'Paludisme cérébral : troubles de la conscience (Glasgow 11), anémie sévère (Hb 4.8 g/dL), détresse respiratoire.'},
+  {id:'P006',nom:'Biya Fatima',age:32,genre:'F',district:'Garoua I',admission:'21/01/2026',severite:'Faible',symptoms:'Fièvre légère (37.8°C), malaise général, fatigue modérée. Traitement ambulatoire initié.'},
+  {id:'P007',nom:'Ngono Albert',age:55,genre:'M',district:'Douala II',admission:'22/01/2026',severite:'Modéré',symptoms:'Frissons, myalgies diffuses, céphalées frontales. Frottis positif. Sous ACT depuis 48h.'},
+  {id:'P008',nom:'Abena Sylvie',age:19,genre:'F',district:'Yaoundé III',admission:'22/01/2026',severite:'Stable',symptoms:'Post-traitement. Contrôle J5 favorable. Sortie prévue demain sous réserve de frottis négatif.'},
+  {id:'P009',nom:'Mendomo Eric',age:41,genre:'M',district:'Bafoussam II',admission:'23/01/2026',severite:'Faible',symptoms:'Fièvre basse (38°C), asthénie légère. Prise en charge ambulatoire. Frottis faiblement positif.'},
+  {id:'P010',nom:'Djoukwe Hélène',age:25,genre:'F',district:'Douala I (Akwa)',admission:'23/01/2026',severite:'Stable',symptoms:'Guérie cliniquement. Contrôle de sortie. Frottis négatif J7. Education thérapeutique réalisée.'},
+];
+
+function getPatients(){
+  const stored = JSON.parse(localStorage.getItem('kp_patients')||'[]');
+  return stored.length ? stored : defaultPatients;
+}
+
+/* ── PILLS ── */
+function pillClass(s){return{Faible:'pill-f',Modéré:'pill-m',Critique:'pill-c',Stable:'pill-s'}[s]||'pill-s';}
+
+/* ── RENDER ── */
+let currentFilter = '';
+function renderPatients(data){
+  const tb = document.getElementById('pts-tbody');
+  tb.innerHTML = '';
+  data.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong style="color:var(--blue2);font-size:0.82rem;">${p.id}</strong></td>
+      <td><strong>${p.nom}</strong></td>
+      <td style="color:var(--gray);">${p.age} ans, ${p.genre}</td>
+      <td style="font-size:0.82rem;">📍 ${p.district}</td>
+      <td style="font-size:0.82rem;color:var(--gray);">📅 ${p.admission}</td>
+      <td><span class="sev-pill ${pillClass(p.severite)}">${p.severite.toUpperCase()}</span></td>
+      <td><div class="act-btns">
+        <button class="act-btn ab-view" title="Voir" onclick='viewPt(${JSON.stringify(p)})'>👁️</button>
+        <button class="act-btn ab-edit" title="Éditer" onclick="toast('✏️','Édition','Modification du patient ${p.id}')">✏️</button>
+        <button class="act-btn ab-del" title="Supprimer" onclick="delPt('${p.id}')">🗑️</button>
+      </div></td>`;
+    tb.appendChild(tr);
+  });
+  const pts = getPatients();
+  document.getElementById('st-total').textContent = pts.length;
+  document.getElementById('st-trt').textContent = pts.filter(p=>['Modéré','Critique','Faible'].includes(p.severite)).length;
+  document.getElementById('st-crit').textContent = pts.filter(p=>p.severite==='Critique').length;
+  document.getElementById('st-gu').textContent = pts.filter(p=>p.severite==='Stable').length;
+  document.getElementById('nb-count').textContent = pts.length;
+}
+
+function filterPts(q){
+  const pts = getPatients();
+  renderPatients(pts.filter(p=>p.nom.toLowerCase().includes(q.toLowerCase())||p.id.toLowerCase().includes(q.toLowerCase())));
+}
+function filterSev(s){
+  const pts = getPatients();
+  renderPatients(s ? pts.filter(p=>p.severite===s) : pts);
+}
+function viewPt(p){
+  document.getElementById('modal-body').innerHTML = `
+    <div class="detail-grid">
+      <div class="dg-item"><p>ID Patient</p><span style="color:var(--blue2)">${p.id}</span></div>
+      <div class="dg-item"><p>Nom Complet</p><span>${p.nom}</span></div>
+      <div class="dg-item"><p>Âge / Genre</p><span>${p.age} ans — ${p.genre==='M'?'Masculin':'Féminin'}</span></div>
+      <div class="dg-item"><p>District Sanitaire</p><span>${p.district}</span></div>
+      <div class="dg-item"><p>Date d'admission</p><span>${p.admission}</span></div>
+      <div class="dg-item"><p>Sévérité</p><span class="sev-pill ${pillClass(p.severite)}">${p.severite.toUpperCase()}</span></div>
+    </div>
+    <div class="detail-symp"><p>Symptômes & Observations Cliniques</p><span>${p.symptoms}</span></div>`;
+  document.getElementById('overlay').classList.add('on');
+}
+function closeModal(){document.getElementById('overlay').classList.remove('on');}
+function delPt(id){
+  if(!confirm('Supprimer ce patient ?')) return;
+  let pts = getPatients().filter(p=>p.id!==id);
+  localStorage.setItem('kp_patients',JSON.stringify(pts));
+  renderPatients(pts);
+  toast('🗑️','Supprimé','Patient '+id+' retiré du registre.','var(--red)');
+}
+
+/* ── PAGES ── */
+const pgTitles = {dashboard:'Tableau de Bord',patients:'Gestion des Patients',carte:'Carte Épidémiologique',alertes:'Alertes Épidémiologiques'};
+function showPage(p, el){
+  document.querySelectorAll('.page').forEach(d=>d.classList.remove('on'));
+  document.getElementById('page-'+p).classList.add('on');
+  document.querySelectorAll('.nav-a').forEach(a=>a.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('pg-title').textContent = pgTitles[p]||'';
+  if(p==='dashboard') setTimeout(initCharts,80);
+  if(p==='carte') renderCarte();
+  if(p==='alertes') renderAlertes();
+}
+
+/* ── DISTRICTS ── */
+const districts = [
+  {name:'Douala I (Akwa)',cas:187,level:'hi',pct:88},{name:'Douala II',cas:142,level:'hi',pct:72},
+  {name:'Yaoundé I',cas:118,level:'me',pct:60},{name:'Yaoundé II',cas:95,level:'me',pct:48},
+  {name:'Bafoussam I',cas:73,level:'me',pct:37},{name:'Garoua I',cas:52,level:'lo',pct:26},
+  {name:'Douala III',cas:48,level:'lo',pct:24},{name:'Yaoundé III',cas:41,level:'lo',pct:21},
+  {name:'Bafoussam II',cas:35,level:'lo',pct:18},{name:'Douala I (Bonanjo)',cas:28,level:'lo',pct:14},
+  {name:'Ngaoundéré I',cas:22,level:'lo',pct:11},{name:'Garoua II',cas:18,level:'lo',pct:9},
+];
+function renderCarte(){
+  const g = document.getElementById('district-grid'); g.innerHTML='';
+  const cols = {hi:'var(--red)',me:'var(--accent)',lo:'var(--green)'};
+  districts.forEach(d=>{
+    const div = document.createElement('div');
+    div.className = `dc ${d.level}`;
+    div.innerHTML = `<div class="dc-name">📍 ${d.name}</div><div class="dc-stat">Cas actifs : <strong>${d.cas}</strong></div><div class="dc-bar"><div class="dc-fill" style="width:0%;background:${cols[d.level]}" data-pct="${d.pct}"></div></div>`;
+    g.appendChild(div);
+  });
+  setTimeout(()=>document.querySelectorAll('.dc-fill').forEach(b=>b.style.width=b.dataset.pct+'%'),50);
+  setTimeout(()=>{
+    const c = document.getElementById('districtChart');
+    if(c._ch) c._ch.destroy();
+    c._ch = new Chart(c,{type:'bar',data:{labels:districts.map(d=>d.name.substring(0,13)),datasets:[{label:'Cas actifs',data:districts.map(d=>d.cas),backgroundColor:districts.map(d=>d.level==='hi'?'rgba(239,68,68,0.75)':d.level==='me'?'rgba(245,158,11,0.75)':'rgba(16,185,129,0.75)'),borderRadius:7,borderSkipped:false}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'}},x:{grid:{display:false}}}}});
+  },100);
+}
+
+/* ── ALERTES ── */
+const alertes = [
+  {ico:'🚨',lbl:'CRITIQUE',title:'Épidémie — Douala II',desc:'Augmentation de 47% des cas critiques en 7 jours. Déploiement d\'équipes mobiles de prise en charge recommandé immédiatement.',date:'Aujourd\'hui, 14h32',bg:'rgba(239,68,68,0.06)',border:'var(--red)',lbg:'rgba(239,68,68,0.12)',lc:'var(--red)'},
+  {ico:'⚠️',lbl:'MODÉRÉ',title:'Rupture de stock ACT — Bafoussam',desc:'Stock d\'Artémisinine-Luméfantrine inférieur à 20% dans le district de Bafoussam I. Réapprovisionnement urgent demandé auprès du District Sanitaire Régional.',date:'Hier, 09h15',bg:'rgba(245,158,11,0.06)',border:'var(--accent)',lbg:'rgba(245,158,11,0.12)',lc:'#B45309'},
+  {ico:'ℹ️',lbl:'INFO',title:'Saison des pluies — Hausse prévisionnelle',desc:'Prévision météorologique : début saison des pluies dans 2 semaines. Augmentation attendue de 35% des cas dans les Régions Littoral et Centre. Mobilisation préventive recommandée.',date:'12/01/2026',bg:'rgba(37,99,235,0.05)',border:'var(--blue2)',lbg:'rgba(37,99,235,0.1)',lc:'var(--blue2)'},
+];
+function renderAlertes(){
+  const l = document.getElementById('alertes-list'); l.innerHTML='';
+  alertes.forEach(a=>{
+    const div = document.createElement('div');
+    div.className='alert-item';
+    div.style.cssText=`background:${a.bg};border:1px solid ${a.border}22;border-left:4px solid ${a.border};`;
+    div.innerHTML=`<span class="ai-ico">${a.ico}</span><div class="ai-body"><div class="ai-head"><span style="background:${a.lbg};color:${a.lc};font-size:0.7rem;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;">${a.lbl}</span><span class="ai-title">${a.title}</span><span class="ai-date">🕐 ${a.date}</span></div><p class="ai-desc">${a.desc}</p></div>`;
+    l.appendChild(div);
+  });
+}
+
+/* ── CHARTS ── */
+let chartsInited = false;
+function initCharts(){
+  if(chartsInited) return; chartsInited=true;
+  new Chart(document.getElementById('lineChart'),{type:'line',data:{labels:['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'],datasets:[{label:'2026',data:[980,1050,1120,890,760,820,970,1100,1250,1284,null,null],borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.07)',tension:0.4,fill:true,pointBackgroundColor:'#2563EB',pointRadius:4,pointHoverRadius:6},{label:'2025',data:[820,900,950,780,700,750,880,950,1050,1100,1020,980],borderColor:'#14B8A6',backgroundColor:'rgba(20,184,166,0.04)',tension:0.4,fill:true,borderDash:[6,4],pointRadius:3}]},options:{plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{beginAtZero:false,min:500,grid:{color:'rgba(0,0,0,0.04)'}},x:{grid:{display:false}}}}});
+  new Chart(document.getElementById('doughnut'),{type:'doughnut',data:{labels:['Faible','Modéré','Critique','Stable'],datasets:[{data:[312,647,47,278],backgroundColor:['#10B981','#F59E0B','#EF4444','#14B8A6'],borderWidth:0,hoverOffset:10}]},options:{plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}}},cutout:'66%'}});
+  new Chart(document.getElementById('barChart'),{type:'bar',data:{labels:['Douala I','Douala II','Yaoundé I','Yaoundé II','Bafoussam','Garoua I'],datasets:[{data:[187,142,118,95,73,52],backgroundColor:['rgba(239,68,68,0.8)','rgba(239,68,68,0.6)','rgba(245,158,11,0.8)','rgba(245,158,11,0.6)','rgba(16,185,129,0.8)','rgba(16,185,129,0.6)'],borderRadius:8,borderSkipped:false}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'}},x:{grid:{display:false}}}}});
+  new Chart(document.getElementById('ageChart'),{type:'bar',data:{labels:['0–5','6–14','15–24','25–44','45–60','60+'],datasets:[{label:'Cas actifs',data:[245,312,187,298,154,88],backgroundColor:'rgba(37,99,235,0.75)',borderRadius:8,borderSkipped:false}]},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'}},y:{grid:{display:false}}}}});
+}
+
+/* ── USER ── */
+function initUser(){
+  const s=JSON.parse(localStorage.getItem('kp_session')||'{}');
+  const name=s.name||'Dr. Jean Dupont';
+  const ini=name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('sb-ava').textContent=ini;
+  document.getElementById('top-ava').textContent=ini;
+  document.getElementById('sb-name').textContent=name;
+  const roles={medecin:'Médecin Épidémiologiste',infirmier:'Infirmier(e)',admin:'Administrateur',citoyen:'Citoyen'};
+  document.getElementById('sb-role').textContent=roles[s.role]||'Médecin Épidémiologiste';
+}
+function logout(){localStorage.removeItem('kp_session');window.location.href='index.html';}
+function toast(icon,title,msg,color='var(--teal2)'){
+  const t=document.getElementById('toast');t.style.borderLeftColor=color;
+  document.getElementById('ti').textContent=icon;document.getElementById('tt').textContent=title;document.getElementById('tm').textContent=msg;
+  t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3200);
+}
+
+window.onload=()=>{
+  initUser();
+  document.getElementById('tb-date').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  renderPatients(getPatients());
+  // check hash
+  if(location.hash==='#carte') showPage('carte',null);
+  else if(location.hash==='#alertes') showPage('alertes',null);
+};
+</script>
+</body>
+</html>
